@@ -32,10 +32,11 @@ impl BeforeMiddleware for ResponseTime {
 
 impl AfterMiddleware for ResponseTime {
     fn after(&self, req: &mut Request, res: Response) -> IronResult<Response> {
+
         let delta = precise_time_ns() - *req.extensions.get::<ResponseTime>().unwrap();
         let date = Local::now();
 
-        println!("- Request received at {} and took : {} ms", date.format("%Y-%m-%d %H:%M:%S").to_string().yellow().bold() ,((delta as f64) / 1000000.0).to_string().green().bold() );
+        println!(" - {} : {} request took {} μs" , date.format("%d-%m-%Y %H:%M:%S").to_string().yellow().bold() ,&req.method, ((delta as f64) / 1000.0).to_string().green().bold() );
         Ok(res)
     }
 }
@@ -69,6 +70,10 @@ fn main() {
     let mut chain = Chain::new(router);
     chain.link_before(ResponseTime);
     chain.link_after(ResponseTime);
+
+    let date = Local::now();
+
+    println!("{} {}", date.format("%d-%m-%Y %H:%M:%S").to_string().yellow().bold() , ": Server is listening on port 3000 \n".yellow().bold());
 
     Iron::new(chain).http("localhost:3000").unwrap();
 }
