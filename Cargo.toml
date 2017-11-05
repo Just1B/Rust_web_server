@@ -1,0 +1,12 @@
+[package]
+name = "rust_server"
+version = "0.1.0"
+authors = ["Justin"]
+
+[dependencies]
+iron = "*"
+time = "*"
+router = "*"
+rustc-serialize = "*"
+chrono = "*"
+colored = "*"
